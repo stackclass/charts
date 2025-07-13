@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stackclass.fullname" . }}-backend
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "stackclass.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      labels:
+        {{- include "stackclass.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: backend
+      annotations:
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: check-postgresql
+          image: bitnami/postgresql
+          command: ['sh', '-c', 'until pg_isready -h {{ .Release.Name }}-postgresql -U {{ .Values.postgresql.auth.username }}; do sleep 2; done']
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.targetPort }}
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ include "stackclass.fullname" . }}-backend-secrets
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "stackclass.fullname" . }}-postgresql-secrets
+                  key: database-url
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          volumeMounts:
+            - name: stackclass-storage
+              mountPath: /data/repos
+              subPath: repos
+            - name: stackclass-storage
+              mountPath: /data/caches
+              subPath: caches
+            {{- if .Values.backend.volumeMounts }}
+            {{- toYaml .Values.backend.volumeMounts | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: stackclass-storage
+          persistentVolumeClaim:
+            claimName: {{ include "stackclass.fullname" . }}-pvc
+        {{- if .Values.backend.volumes }}
+        {{- toYaml .Values.backend.volumes | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,120 @@
+# Default values for stackclass.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+fullnameOverride: ""
+nameOverride: ""
+
+# Global configurations
+global:
+  # Environment name (e.g., dev, staging, prod)
+  env: dev
+  # Enable debug mode
+  debug: false
+
+# Frontend configurations
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: ghcr.io/stackclass/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3000
+    targetPort: 3000
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: stackclass.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: frontend-tls
+        hosts:
+          - stackclass.dev
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+# Backend configurations
+backend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: ghcr.io/stackclass/stackclass-server
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: api.stackclass.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: backend-tls
+        hosts:
+          - api.stackclass.dev
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+  persistence:
+    size: 10Gi
+    storageClassName: standard
+
+# PostgreSQL configurations
+postgresql:
+  enabled: true
+  auth:
+    username: stackclass
+    database: stackclass
+    existingSecret: '{{ include "stackclass.fullname" . }}-postgresql-secrets'
+  primary:
+    persistence:
+      size: 10Gi
+      storageClassName: standard
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+# Additional configurations
+nodeSelector: {}
+tolerations: []
+affinity: {}

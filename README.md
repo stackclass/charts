@@ -51,10 +51,6 @@ deletes the release.
 
 ## Documentation
 
-- All the helm chart source code will be committed to master branch, all the
-  charts will be placed under `/charts` and each chart will be  separate with
-  their own folder
-
 - The `index.yaml` will be committed to `gh-pages` branch, which represent
   an accessible page. The helm repository required an `index.yaml` file to show
   its charts structure
