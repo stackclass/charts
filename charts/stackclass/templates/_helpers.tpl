@@ -73,3 +73,15 @@ The password consists of 16 alphanumeric characters.
   {{- end -}}
   {{- .Values.postgresql.password -}}
 {{- end -}}
+
+{{/*
+Generate PostgreSQL connection URL based on enabled status.
+Usage: {{ include "stackclass.postgresql.url" . }}
+*/}}
+{{- define "stackclass.postgresql.url" -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- printf "postgresql://%s:%s@%s-postgresql/%s" .Values.postgresql.auth.username (include "stackclass.postgresql.password" .) .Release.Name .Values.postgresql.auth.database | quote -}}
+  {{- else -}}
+    "postgresql://<REPLACE_WITH_DB_USER>:<REPLACE_WITH_DB_PASS>@localhost/<REPLACE_WITH_DB_DATABASE>"
+  {{- end -}}
+{{- end -}}
