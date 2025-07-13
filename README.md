@@ -24,7 +24,7 @@ issues](https://img.shields.io/github/issues/stackclass/charts)](https://github.
 ### Once Helm has been set up correctly, add the repo as follows:
 
 ```sh
-  helm repo add stackclass https://charts.stackclass.dev
+helm repo add stackclass https://stackclass.github.io/charts/
 ```
 
 If you had already added this repo earlier, run `helm repo update` to retrieve
@@ -34,7 +34,7 @@ stackclass` to see the charts.
 ### To install the chart with the release name `stackclass`:
 
 ```sh
- helm upgrade --install stackclass stackclass/stackclass --create-namespace --namespace=stackclass
+helm upgrade --install stackclass stackclass/stackclass --create-namespace -n=stackclass
 ```
 
 The command deploys StackClass API Server, frontend and services on the
@@ -43,7 +43,7 @@ Kubernetes cluster in the default configuration.
 ### To uninstall the chart:
 
 ```sh
-  helm delete stackclass
+helm delete stackclass
 ```
 
 The command removes all the Kubernetes components associated with the chart and
