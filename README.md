@@ -6,7 +6,7 @@ StackClass to Kubernetes.
 
 [![Release
 Charts](https://github.com/stackclass/charts/actions/workflows/release.yml/badge.svg)](https://github.com/stackclass/charts/actions/workflows/release.yml)
-[![License](https://img.shields.io/github/license/stackclass/charts)](https://github.com/stackclass/charts/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/stackclass/charts)](https://github.com/stackclass/charts/blob/main/LICENSE)
 [![GitHub
 contributors](https://img.shields.io/github/contributors/stackclass/charts)](https://github.com/stackclass/charts/graphs/charts)
 [![GitHub
@@ -51,7 +51,7 @@ deletes the release.
 
 ## Documentation
 
-- All the helm chart source code will be committed to master branch, all the
+- All the helm chart source code will be committed to main branch, all the
   charts will be placed under `/charts` and each chart will be  separate with
   their own folder
 
