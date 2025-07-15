@@ -85,3 +85,27 @@ Usage: {{ include "stackclass.postgresql.url" . }}
     "postgresql://<REPLACE_WITH_DB_USER>:<REPLACE_WITH_DB_PASS>@localhost/<REPLACE_WITH_DB_DATABASE>"
   {{- end -}}
 {{- end -}}
+
+{{/*
+Generate frontend URL based on ingress host and TLS status.
+Usage: {{ include "stackclass.frontend.url" . }}
+*/}}
+{{- define "stackclass.frontend.url" -}}
+  {{- if .Values.frontend.ingress.tls.enabled -}}
+    {{- printf "https://%s" .Values.frontend.ingress.host | quote -}}
+  {{- else -}}
+    {{- printf "http://%s" .Values.frontend.ingress.host | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Generate backend URL based on ingress host and TLS status.
+Usage: {{ include "stackclass.backend.url" . }}
+*/}}
+{{- define "stackclass.backend.url" -}}
+  {{- if .Values.backend.ingress.tls.enabled -}}
+    {{- printf "https://%s" .Values.backend.ingress.host | quote -}}
+  {{- else -}}
+    {{- printf "http://%s" .Values.backend.ingress.host | quote -}}
+  {{- end -}}
+{{- end -}}

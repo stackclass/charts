@@ -21,15 +21,10 @@ frontend:
     enabled: true
     className: ""
     annotations:
-    hosts:
-      - host: stackclass.dev
-        paths:
-          - path: /
-            pathType: Prefix
+    host: stackclass.local
     tls:
-      - secretName: frontend-tls
-        hosts:
-          - stackclass.dev
+      enabled: false
+      secretName: "{{ .Release.Name }}-frontend-tls"
   resources:
     limits:
       cpu: 500m
@@ -59,15 +54,10 @@ backend:
     enabled: true
     className: ""
     annotations:
-    hosts:
-      - host: api.stackclass.dev
-        paths:
-          - path: /
-            pathType: Prefix
+    host: api.stackclass.dev
     tls:
-      - secretName: backend-tls
-        hosts:
-          - api.stackclass.dev
+       enabled: false
+       secretName: "{{ .Release.Name }}-backend-tls"
   resources:
     limits:
       cpu: 1000m
