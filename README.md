@@ -154,6 +154,8 @@ backend:
 
 ### Ingress
 
+#### Ingress Class
+
 By default, the Ingress resources will use the cluster's default Ingress
 Controller (e.g., Traefik for k3s, ALB for EKS). Below is a table summarizing
 the configurations for different platforms:
@@ -169,6 +171,22 @@ the configurations for different platforms:
 
 - If `className` is left empty, the cluster will use its default Ingress Controller.
 - `annotations` are only required for overriding controller-specific behaviors.
+
+#### Hostname
+
+The default `host` values are configured for testing purposes:
+
+- Frontend: `stackclass.local`
+- Backend: `api.stackclass.local`
+
+For production environments, you should override these values using `--set` or a
+custom `values.yaml` file. For example:
+
+```sh
+helm install stackclass stackclass/stackclass \
+    --set frontend.ingress.host=your-frontend-domain.com \
+    --set backend.ingress.host=your-backend-domain.com
+```
 
 ## Documentation
 
