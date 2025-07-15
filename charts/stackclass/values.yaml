@@ -12,7 +12,7 @@ frontend:
   image:
     repository: ghcr.io/stackclass/frontend
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   service:
     type: ClusterIP
     port: 3000
@@ -45,7 +45,7 @@ backend:
   image:
     repository: ghcr.io/stackclass/stackclass-server
     tag: latest
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
   service:
     type: ClusterIP
     port: 8080
