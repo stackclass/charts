@@ -6,7 +6,7 @@ metadata:
     {{- include "stackclass.labels" . | nindent 4 }}
   {{- with .Values.frontend.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml .Values.frontend.ingress.annotations | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.frontend.ingress.className }}

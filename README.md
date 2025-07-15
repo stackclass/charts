@@ -152,6 +152,24 @@ backend:
     storageClass: ""
 ```
 
+### Ingress
+
+By default, the Ingress resources will use the cluster's default Ingress
+Controller (e.g., Traefik for k3s, ALB for EKS). Below is a table summarizing
+the configurations for different platforms:
+
+| Platform          | Ingress Class | Documentation |
+|-------------------|---------------|---------------|
+| **k3s (Traefik)** | `traefik`     | [Traefik Docs](https://doc.traefik.io/traefik/) |
+| **AWS EKS (ALB)** | `alb`         | [AWS ALB Docs](https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html) |
+| **GKE (GCE)**     | `gce`         | [GKE Ingress Docs](https://cloud.google.com/kubernetes-engine/docs/concepts/ingress) |
+| **Standard**      | `nginx`       | [Nginx Ingress Docs](https://kubernetes.github.io/ingress-nginx/) |
+
+**Notes:**
+
+- If `className` is left empty, the cluster will use its default Ingress Controller.
+- `annotations` are only required for overriding controller-specific behaviors.
+
 ## Documentation
 
 - All the helm chart source code will be committed to main branch, all the
