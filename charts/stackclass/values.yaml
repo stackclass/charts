@@ -86,7 +86,7 @@ backend:
     targetCPUUtilizationPercentage: 70
   persistence:
     size: 10Gi
-    storageClassName: standard
+    storageClassName: ""
 
 # PostgreSQL configurations
 postgresql:
@@ -98,7 +98,6 @@ postgresql:
   primary:
     persistence:
       size: 10Gi
-      storageClassName: standard
   resources:
     limits:
       cpu: 1000m
