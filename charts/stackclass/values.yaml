@@ -54,7 +54,7 @@ backend:
     enabled: true
     className: ""
     annotations:
-    host: api.stackclass.dev
+    host: api.stackclass.local
     tls:
        enabled: false
        secretName: "{{ .Release.Name }}-backend-tls"
