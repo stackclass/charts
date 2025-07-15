@@ -10,6 +10,6 @@ spec:
   resources:
     requests:
       storage: {{ .Values.backend.persistence.size | default "10Gi" }}
-  {{- if .Values.backend.persistence.storageClassName }}
-  storageClassName: {{ .Values.backend.persistence.storageClassName }}
+  {{- if .Values.backend.persistence.storageClass }}
+  storageClassName: {{ .Values.backend.persistence.storageClass }}
   {{- end }}

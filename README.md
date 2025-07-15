@@ -4,13 +4,10 @@ This repository hosts official [Helm](https://helm.sh) charts for
 [StackClass](https://stackclass.dev). These charts are used to deploy
 StackClass to Kubernetes.
 
-[![Release
-Charts](https://github.com/stackclass/charts/actions/workflows/release.yml/badge.svg)](https://github.com/stackclass/charts/actions/workflows/release.yml)
+[![Release Charts](https://github.com/stackclass/charts/actions/workflows/release.yml/badge.svg)](https://github.com/stackclass/charts/actions/workflows/release.yml)
 [![License](https://img.shields.io/github/license/stackclass/charts)](https://github.com/stackclass/charts/blob/main/LICENSE)
-[![GitHub
-contributors](https://img.shields.io/github/contributors/stackclass/charts)](https://github.com/stackclass/charts/graphs/charts)
-[![GitHub
-issues](https://img.shields.io/github/issues/stackclass/charts)](https://github.com/stackclass/charts/issues)
+[![GitHub contributors](https://img.shields.io/github/contributors/stackclass/charts)](https://github.com/stackclass/charts/graphs/charts)
+[![GitHub issues](https://img.shields.io/github/issues/stackclass/charts)](https://github.com/stackclass/charts/issues)
 
 ## Usage
 
@@ -21,33 +18,139 @@ issues](https://img.shields.io/github/issues/stackclass/charts)](https://github.
 - PV provisioner support in the underlying infrastructure
 - ReadWriteMany volumes for deployment scaling
 
-### Once Helm has been set up correctly, add the repo as follows:
+### Add Helm Repository
 
 ```sh
 helm repo add stackclass https://charts.stackclass.dev
 ```
 
 If you had already added this repo earlier, run `helm repo update` to retrieve
-the latest versions of the packages.  You can then run `helm search repo
+the latest versions of the packages. You can then run `helm search repo
 stackclass` to see the charts.
 
-### To install the chart with the release name `stackclass`:
+### Install StackClass
+
+> **Important Notes**: By default, this installs PostgreSQL (see [PostgreSQL
+  config](#postgresql) for credentials). To customize (e.g., disable PostgreSQL
+  or adjust storage), use `-f values.yaml` or `--set` after reviewing the
+  [Configuration](#configuration) section.
+
+To install StackClass for the first time with the release name `stackclass`:
 
 ```sh
-helm upgrade --install stackclass stackclass/stackclass --create-namespace -n=stackclass
+helm install stackclass stackclass/stackclass --create-namespace -n=stackclass
 ```
 
-The command deploys StackClass API Server, frontend and services on the
-Kubernetes cluster in the default configuration.
+This command deploys the StackClass API Server, frontend, and services on your
+Kubernetes cluster with default configurations.
 
-### To uninstall the chart:
+### Upgrade StackClass
+
+> **Critical**: If PostgreSQL was enabled during initial install, you **must**
+  keep `postgresql.enabled=false` during upgrades, See [PostgreSQL](#postgresql)
+  for details.
+
+To upgrade an existing StackClass deployment (e.g., after modifying `values.yaml`):
 
 ```sh
-helm delete stackclass
+helm upgrade stackclass stackclass/stackclass -n=stackclass --set postgresql.enabled=false
 ```
 
-The command removes all the Kubernetes components associated with the chart and
-deletes the release.
+**Optional Flags:**
+
+- `--atomic`: Automatically rollback if the upgrade fails.
+- `--wait`: Wait for all resources to be ready before marking the upgrade as complete.
+- `-f values.yaml`: Override default values with a custom configuration file.
+
+Example with custom values and atomic upgrade:
+
+```sh
+helm upgrade stackclass stackclass/stackclass\
+    -n=stackclass\
+    --set postgresql.enabled=false\
+    --atomic --wait \
+    -f values.yaml
+```
+
+### Uninstall StackClass
+
+To uninstall the chart and remove all associated Kubernetes resources:
+
+```sh
+helm uninstall stackclass -n=stackclass
+```
+
+## Configuration
+
+### PostgreSQL
+
+PostgreSQL is enabled by default (`postgresql.enabled=true`). It will be
+automatically deployed with generated credentials.
+
+**Using External PostgreSQL**:
+
+1. Disable the built-in PostgreSQL:
+  ```sh
+  helm install stackclass stackclass/stackclass --set postgresql.enabled=false
+  ```
+2. Manually update these secrets:
+  - `backend-secrets.yaml`: Replace `DATABASE_URL`
+  - `frontend-secrets.yaml`: Replace `BETTER_DATABASE_URL`
+
+### Application Configuration
+
+This chart manages application settings through Kubernetes Secrets. By default, it creates:
+- `{release-name}-backend-secrets`
+- `{release-name}-frontend-secrets`
+
+**To customize configurations**:
+1. **Before installation**:
+   Modify `values.yaml` or use `--set` to override secret values.
+
+2. **After installation**:
+   Edit secrets directly (changes persist through upgrades):
+
+   ```sh
+   kubectl edit secret stackclass-backend-secrets -n stackclass
+   kubectl edit secret stackclass-frontend-secrets -n stackclass
+   ```
+
+**Key Configuration Files**:
+- Backend: Refer to `charts/stackclass/templates/secrets/backend-secrets.yaml`
+- Frontend: Refer to `charts/stackclass/templates/secrets/frontend-secrets.yaml`
+- Environment templates: Check each component's `.env.example` for available variables.
+
+### Storage
+
+This chart configures persistent storage for PostgreSQL and backend services.
+All volumes use `ReadWriteOnce` access mode by default.
+
+When left unspecified or set to an empty string (`storageClass: ""`), the chart
+will automatically use your Kubernetes cluster's default StorageClass for
+dynamic volume provisioning. If you need to use a specific storage backend
+(e.g., AWS gp3, Azure managed-premium, or GCP standard), you can explicitly
+specify the StorageClass name.
+
+> 💡 Run `kubectl get storageclass` to see available classes in your cluster.
+
+**PostgreSQL** uses 10Gi of storage with your cluster's default StorageClass.
+
+```yaml
+postgresql:
+  primary:
+    persistence:
+      size: 10Gi
+      storageClass: ""
+```
+
+**Backend** defaults to 10Gi with cluster-default storage.
+
+```yaml
+backend:
+  persistence:
+    size: 10Gi
+    storageClass: ""
+```
 
 ## Documentation
 
