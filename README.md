@@ -24,7 +24,7 @@ issues](https://img.shields.io/github/issues/stackclass/charts)](https://github.
 ### Once Helm has been set up correctly, add the repo as follows:
 
 ```sh
-helm repo add stackclass https://stackclass.github.io/charts/
+helm repo add stackclass https://charts.stackclass.dev
 ```
 
 If you had already added this repo earlier, run `helm repo update` to retrieve

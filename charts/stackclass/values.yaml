@@ -5,17 +5,10 @@
 fullnameOverride: ""
 nameOverride: ""
 
-# Global configurations
-global:
-  # Environment name (e.g., dev, staging, prod)
-  env: dev
-  # Enable debug mode
-  debug: false
-
 # Frontend configurations
 frontend:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: ghcr.io/stackclass/frontend
     tag: latest
@@ -48,14 +41,14 @@ frontend:
       memory: 256Mi
   autoscaling:
     enabled: true
-    minReplicas: 2
+    minReplicas: 1
     maxReplicas: 5
     targetCPUUtilizationPercentage: 80
 
 # Backend configurations
 backend:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: ghcr.io/stackclass/stackclass-server
     tag: latest
@@ -88,7 +81,7 @@ backend:
       memory: 512Mi
   autoscaling:
     enabled: true
-    minReplicas: 2
+    minReplicas: 1
     maxReplicas: 5
     targetCPUUtilizationPercentage: 70
   persistence:
