@@ -94,18 +94,20 @@ postgresql:
       cpu: 500m
       memory: 512Mi
 
+# Certificate issuer configurations for Let's Encrypt
+# Used to automatically generate TLS certificates for ingress resources
+# Requires cert-manager to be installed in the cluster
+issuer:
+  enabled: false
+  email: "your-email@example.com"
+  environment: "staging"  # or "prod"
+  name: "{{ .Release.Name }}-issuer"
+
 # Cert-manager configurations
 cert-manager:
-  enabled: false
   crds:
     enabled: true
     keep: true
-  issuer:
-    email: "your-email@example.com"
-    environment: "staging"  # or "prod"
-  issuerRef:
-    name: "{{ .Release.Name }}-issuer"
-
 
 # Additional configurations
 nodeSelector: {}

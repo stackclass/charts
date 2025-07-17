@@ -228,14 +228,13 @@ kubectl get ingress -n stackclass
 
 To automate TLS certificate management using `cert-manager`, follow these steps:
 
-1. **Enable Cert-Manager** in `values.yaml` or via `--set`:
+1. **Enable Issuer** in `values.yaml` or via `--set`:
 
 ```yaml
-cert-manager:
+issuer:
   enabled: true
-  issuer:
-    email: "your-email@example.com"
-    environment: "staging"  # or "prod"
+  email: "your-email@example.com"
+  environment: "staging"  # or "prod"
 ```
 
 2. **Install or Upgrade the Chart**:
@@ -243,9 +242,9 @@ cert-manager:
 ```yaml
 helm upgrade stackclass stackclass/stackclass \
     -n=stackclass \
-    --set cert-manager.enabled=true \
-    --set cert-manager.issuer.email=your-email@example.com \
-    --set cert-manager.issuer.environment=staging \
+    --set issuer.enabled=true \
+    --set issuer.email=your-email@example.com \
+    --set issuer.environment=staging \
     --set frontend.ingress.tls.enabled=true \
     --set backend.ingress.tls.enabled=true
 ```

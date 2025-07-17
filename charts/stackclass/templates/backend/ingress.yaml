@@ -9,8 +9,8 @@ metadata:
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if and .Values.backend.ingress.tls.enabled (index .Values "cert-manager" "enabled") }}
-    cert-manager.io/issuer: {{ (index .Values "cert-manager" "issuerRef" "name") | quote }}
+  {{- if and .Values.backend.ingress.tls.enabled .Values.issuer.enabled }}
+    cert-manager.io/issuer: {{ .Values.issuer.name | quote }}
   {{- end }}
 spec:
   {{- if .Values.global.ingressClass }}
