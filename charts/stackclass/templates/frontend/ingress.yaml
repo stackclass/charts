@@ -10,7 +10,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if and .Values.frontend.ingress.tls.enabled .Values.issuer.enabled }}
-    cert-manager.io/issuer: {{ .Values.issuer.name | quote }}
+    cert-manager.io/issuer: {{ tpl (.Values.issuer.name | quote) . }}
   {{- end }}
 spec:
   {{- if .Values.global.ingressClass }}
