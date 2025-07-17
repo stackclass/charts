@@ -7,11 +7,14 @@ metadata:
     {{- include "stackclass.labels" . | nindent 4 }}
   {{- with .Values.backend.ingress.annotations }}
   annotations:
-    {{- toYaml .Values.backend.ingress.annotations | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.backend.ingress.tls.enabled (index .Values "cert-manager" "enabled") }}
+    cert-manager.io/issuer: {{ (index .Values "cert-manager" "issuerRef" "name") | quote }}
   {{- end }}
 spec:
-  {{- if .Values.backend.ingress.className }}
-  ingressClassName: {{ .Values.backend.ingress.className }}
+  {{- if .Values.global.ingressClass }}
+  ingressClassName: {{ .Values.global.ingressClass }}
   {{- end }}
   rules:
     - host: {{ .Values.backend.ingress.host | quote }}

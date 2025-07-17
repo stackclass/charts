@@ -1,0 +1,22 @@
+{{- if index .Values "cert-manager" "enabled" }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ (index .Values "cert-manager" "issuerRef" "name") | quote }}
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+spec:
+  acme:
+    email: {{ (index .Values "cert-manager" "issuer" "email") | quote }}
+    {{- if eq (index .Values "cert-manager" "issuer" "environment") "prod" }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    {{- else }}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    {{- end }}
+    privateKeySecretRef:
+      name: {{ printf "%s-account-key" (index .Values "cert-manager" "issuerRef" "name") | quote }}
+    solvers:
+      - http01:
+          ingress:
+            class: {{ .Values.global.ingressClass | quote }}
+{{- end }}

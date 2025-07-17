@@ -5,6 +5,9 @@
 fullnameOverride: ""
 nameOverride: ""
 
+global:
+  ingressClass: ""
+
 # Frontend configurations
 frontend:
   enabled: true
@@ -19,7 +22,6 @@ frontend:
     targetPort: 3000
   ingress:
     enabled: true
-    className: ""
     annotations:
     host: stackclass.local
     tls:
@@ -52,7 +54,6 @@ backend:
     targetPort: 8080
   ingress:
     enabled: true
-    className: ""
     annotations:
     host: api.stackclass.local
     tls:
@@ -92,6 +93,19 @@ postgresql:
     requests:
       cpu: 500m
       memory: 512Mi
+
+# Cert-manager configurations
+cert-manager:
+  enabled: false
+  crds:
+    enabled: true
+    keep: true
+  issuer:
+    email: "your-email@example.com"
+    environment: "staging"  # or "prod"
+  issuerRef:
+    name: "{{ .Release.Name }}-issuer"
+
 
 # Additional configurations
 nodeSelector: {}

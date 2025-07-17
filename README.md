@@ -188,6 +188,83 @@ helm install stackclass stackclass/stackclass \
     --set backend.ingress.host=your-backend-domain.com
 ```
 
+#### TLS Support
+
+To enable TLS for the Ingress resources, follow these steps:
+
+1. **Enable TLS** in `values.yaml` or via `--set`:
+
+```yaml
+frontend:
+  ingress:
+    tls:
+      enabled: true
+      secretName: "your-frontend-tls-secret"
+
+backend:
+  ingress:
+    tls:
+      enabled: true
+      secretName: "your-backend-tls-secret"
+```
+
+2. **Create TLS Secrets** (if not already present):
+
+```yaml
+kubectl create secret tls your-frontend-tls-secret \
+    --cert=path/to/cert.crt \
+    --key=path/to/cert.key \
+    -n stackclass
+
+kubectl create secret tls your-backend-tls-secret \
+    --cert=path/to/cert.crt \
+    --key=path/to/cert.key \
+    -n stackclass
+```
+
+3. **Verify** the Ingress resources include TLS:
+
+```sh
+kubectl get ingress -n stackclass
+```
+
+**Notes**:
+- Ensure the certificate's Common Name (CN) or Subject Alternative Names (SANs)
+  match the configured `host` values.
+
+#### Using Cert-Manager for Automatic TLS
+
+To automate TLS certificate management using `cert-manager`, follow these steps:
+
+1. **Enable Cert-Manager** in `values.yaml` or via `--set`:
+
+```yaml
+cert-manager:
+  enabled: true
+  issuer:
+    email: "your-email@example.com"
+    environment: "staging"  # or "prod"
+```
+
+2. **Install or Upgrade the Chart**:
+
+```yaml
+helm upgrade stackclass stackclass/stackclass \
+    -n=stackclass \
+    --set cert-manager.enabled=true \
+    --set cert-manager.issuer.email=your-email@example.com \
+    --set cert-manager.issuer.environment=staging \
+    --set frontend.ingress.tls.enabled=true \
+    --set backend.ingress.tls.enabled=true
+```
+
+**Notes**:
+
+- Replace `your-email@example.com` with a valid email address for certificate
+  notifications.
+- Set `environment` to `prod` for production certificates (rate limits apply).
+- Certificates will be automatically issued and renewed by `cert-manager`.
+
 ## Documentation
 
 - All the helm chart source code will be committed to main branch, all the
