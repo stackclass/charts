@@ -10,7 +10,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if and .Values.frontend.ingress.tls.enabled .Values.issuer.enabled }}
-    cert-manager.io/issuer: {{ tpl (.Values.issuer.name | quote) . }}
+    cert-manager.io/issuer: {{ include "stackclass.issuerName" . | quote }}
   {{- end }}
 spec:
   {{- if .Values.global.ingressClass }}
@@ -31,6 +31,6 @@ spec:
   tls:
     - hosts:
         - {{ .Values.frontend.ingress.host | quote }}
-      secretName: {{ .Values.frontend.ingress.tls.secretName | quote }}
+      secretName: {{ include "stackclass.frontendTlsName" . | quote }}
   {{- end }}
 {{- end }}

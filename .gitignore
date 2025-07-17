@@ -26,6 +26,7 @@
 # Helm
 *.tgz
 Chart.lock
+.helm_ls_cache
 
 *.sh
 .DS_Store

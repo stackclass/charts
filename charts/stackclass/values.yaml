@@ -26,7 +26,8 @@ frontend:
     host: stackclass.local
     tls:
       enabled: false
-      secretName: "{{ .Release.Name }}-frontend-tls"
+      # Leave blank to use the default generated name
+      secretName: ""
   resources:
     limits:
       cpu: 500m
@@ -58,7 +59,8 @@ backend:
     host: api.stackclass.local
     tls:
        enabled: false
-       secretName: "{{ .Release.Name }}-backend-tls"
+       # Leave blank to use the default generated name
+       secretName: ""
   resources:
     limits:
       cpu: 1000m
@@ -101,7 +103,6 @@ issuer:
   enabled: false
   email: "your-email@example.com"
   environment: "staging"  # or "prod"
-  name: "{{ .Release.Name }}-issuer"
 
 # Cert-manager configurations
 cert-manager:
