@@ -119,25 +119,26 @@ Generate issuer name
 
 {{/*
 Generate backend TLS secret name with fallback logic:
-1. Use .Values.backend.tls.secretName if defined
+1. Use .Values.backend.ingress.tls.secretName if defined
 2. Otherwise, generate "{{ fullname }}-backend-tls"
 */}}
 {{- define "stackclass.backendTlsName" -}}
-{{- if .Values.backend.tls.secretName -}}
-    {{- .Values.backend.tls.secretName -}}
+{{- if .Values.backend.ingress.tls.secretName -}}
+    {{- .Values.backend.ingress.tls.secretName -}}
 {{- else -}}
     {{- printf "%s-backend-tls" (include "stackclass.fullname" .) -}}
 {{- end -}}
 {{- end -}}
 
+
 {{/*
 Generate frontend TLS secret name with fallback logic:
-1. Use .Values.frontend.tls.secretName if defined
+1. Use .Values.frontend.ingress.tls.secretName if defined
 2. Otherwise, generate "{{ fullname }}-frontend-tls"
 */}}
 {{- define "stackclass.frontendTlsName" -}}
-{{- if .Values.frontend.tls.secretName -}}
-    {{- .Values.frontend.tls.secretName -}}
+{{- if .Values.frontend.ingress.tls.secretName -}}
+    {{- .Values.frontend.ingress.tls.secretName -}}
 {{- else -}}
     {{- printf "%s-frontend-tls" (include "stackclass.fullname" .) -}}
 {{- end -}}
