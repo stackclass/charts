@@ -46,14 +46,10 @@ Kubernetes cluster with default configurations.
 
 ### Upgrade StackClass
 
-> **Critical**: If PostgreSQL was enabled during initial install, you **must**
-  keep `postgresql.enabled=false` during upgrades, See [PostgreSQL](#postgresql)
-  for details.
-
 To upgrade an existing StackClass deployment (e.g., after modifying `values.yaml`):
 
 ```sh
-helm upgrade stackclass stackclass/stackclass -n=stackclass --set postgresql.enabled=false
+helm upgrade stackclass stackclass/stackclass -n=stackclass
 ```
 
 **Optional Flags:**
@@ -62,14 +58,10 @@ helm upgrade stackclass stackclass/stackclass -n=stackclass --set postgresql.ena
 - `--wait`: Wait for all resources to be ready before marking the upgrade as complete.
 - `-f values.yaml`: Override default values with a custom configuration file.
 
-Example with custom values and atomic upgrade:
+Example with atomic upgrade:
 
 ```sh
-helm upgrade stackclass stackclass/stackclass\
-    -n=stackclass\
-    --set postgresql.enabled=false\
-    --atomic --wait \
-    -f values.yaml
+helm upgrade stackclass stackclass/stackclass -n=stackclass --atomic --wait
 ```
 
 ### Uninstall StackClass
