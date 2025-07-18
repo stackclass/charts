@@ -175,32 +175,35 @@ For production environments, you should override these values using `--set` or a
 custom `values.yaml` file. For example:
 
 ```sh
-helm install stackclass stackclass/stackclass \
-    --set frontend.ingress.host=your-frontend-domain.com \
-    --set backend.ingress.host=your-backend-domain.com
+# Other options ...
+--set frontend.ingress.host=your-frontend-domain.com \
+--set backend.ingress.host=your-backend-domain.com
 ```
 
 #### TLS Support
 
 To enable TLS for the Ingress resources, follow these steps:
 
-1. **Enable TLS** in `values.yaml` or via `--set`:
+**Enable TLS** in `values.yaml` or via `--set`:
 
 ```yaml
-frontend:
-  ingress:
-    tls:
-      enabled: true
-      secretName: "your-frontend-tls-secret"
-
-backend:
-  ingress:
-    tls:
-      enabled: true
-      secretName: "your-backend-tls-secret"
+# Other options ...
+--set frontend.ingress.tls.enabled=true \
+--set backend.ingress.tls.enabled=true
 ```
 
-2. **Create TLS Secrets** (if not already present):
+##### **Using Your Own Certificates**:
+
+If you already have TLS certificates (e.g., from your organization's CA or a
+commercial provider), you can configure them directly:
+
+```yaml
+# Other options ...
+--set frontend.ingress.tls.secretName="your-frontend-tls-secret" \
+--set backend.ingress.tls.secretName="your-backend-tls-secret"
+```
+
+**Create TLS Secrets** (if not already present):
 
 ```yaml
 kubectl create secret tls your-frontend-tls-secret \
@@ -214,7 +217,7 @@ kubectl create secret tls your-backend-tls-secret \
     -n stackclass
 ```
 
-3. **Verify** the Ingress resources include TLS:
+**Verify** the Ingress resources include TLS:
 
 ```sh
 kubectl get ingress -n stackclass
@@ -224,30 +227,40 @@ kubectl get ingress -n stackclass
 - Ensure the certificate's Common Name (CN) or Subject Alternative Names (SANs)
   match the configured `host` values.
 
-#### Using Cert-Manager for Automatic TLS
+##### Using Cert-Manager for Automatic TLS
 
 To automate TLS certificate management using `cert-manager`, follow these steps:
 
-1. **Enable Issuer** in `values.yaml` or via `--set`:
+**Enable Issuer** in `values.yaml` or via `--set`:
 
 ```yaml
-issuer:
-  enabled: true
-  email: "your-email@example.com"
-  environment: "staging"  # or "prod"
+# Other options ...
+--set issuer.enabled=true \
+--set issuer.email=your-email@example.com \
+--set issuer.environment=staging  # or "prod" for production
 ```
 
-2. **Install or Upgrade the Chart**:
+**First-Time Installation**:
 
-```yaml
-helm upgrade stackclass stackclass/stackclass \
-    -n=stackclass \
-    --set issuer.enabled=true \
-    --set issuer.email=your-email@example.com \
-    --set issuer.environment=staging \
-    --set frontend.ingress.tls.enabled=true \
-    --set backend.ingress.tls.enabled=true
-```
+- **Install the Chart**:
+  If this is the first time you are installing `cert-manager` in your cluster,
+  you need to enable the installation of its Custom Resource Definitions
+  (CRDs) by setting `cert-manager.crds.enabled=true`:
+
+  ```yaml
+  # Other options ...
+  --set cert-manager.crds.enabled=true
+  ```
+
+- **Retaining CRDs**:
+  If you want to retain the CRDs even after uninstalling the chart (e.g., for
+  future installations), set `cert-manager.crds.keep=true`:
+
+  ```yaml
+  # Other options ...
+  --set cert-manager.crds.enabled=true \
+  --set cert-manager.crds.keep=true
+  ```
 
 **Notes**:
 

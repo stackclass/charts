@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: {{ .Values.issuer.name | quote }}
+  name: {{ include "stackclass.issuerName" . | quote }}
   labels:
     {{- include "stackclass.labels" . | nindent 4 }}
   annotations:
@@ -18,7 +18,7 @@ spec:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     {{- end }}
     privateKeySecretRef:
-      name: {{ printf "%s-account-key" .Values.issuer.name | quote }}
+      name: {{ printf "%s-account-key" (include "stackclass.issuerName" .) | quote }}
     solvers:
       - http01:
           ingress:

@@ -22,7 +22,7 @@ frontend:
     targetPort: 3000
   ingress:
     enabled: true
-    annotations:
+    annotations: {}
     host: stackclass.local
     tls:
       enabled: false
@@ -55,12 +55,12 @@ backend:
     targetPort: 8080
   ingress:
     enabled: true
-    annotations:
+    annotations: {}
     host: api.stackclass.local
     tls:
-       enabled: false
-       # Leave blank to use the default generated name
-       secretName: ""
+      enabled: false
+      # Leave blank to use the default generated name
+      secretName: ""
   resources:
     limits:
       cpu: 1000m
@@ -102,13 +102,13 @@ postgresql:
 issuer:
   enabled: false
   email: "your-email@example.com"
-  environment: "staging"  # or "prod"
+  environment: "staging" # or "prod"
 
 # Cert-manager configurations
 cert-manager:
   crds:
-    enabled: true
-    keep: true
+    enabled: false
+    keep: false
 
 # Additional configurations
 nodeSelector: {}

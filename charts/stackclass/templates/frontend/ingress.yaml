@@ -5,13 +5,13 @@ metadata:
   name: {{ include "stackclass.fullname" . }}-frontend
   labels:
     {{- include "stackclass.labels" . | nindent 4 }}
-  {{- with .Values.frontend.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- if and .Values.frontend.ingress.tls.enabled .Values.issuer.enabled }}
+    {{- if .Values.frontend.ingress.annotations }}
+    {{- toYaml .Values.frontend.ingress.annotations | nindent 4 }}
+    {{- end }}
+    {{- if and .Values.frontend.ingress.tls.enabled .Values.issuer.enabled }}
     cert-manager.io/issuer: {{ include "stackclass.issuerName" . | quote }}
-  {{- end }}
+    {{- end }}
 spec:
   {{- if .Values.global.ingressClass }}
   ingressClassName: {{ .Values.global.ingressClass }}
