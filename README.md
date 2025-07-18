@@ -95,17 +95,41 @@ This chart manages application settings through Kubernetes Secrets. By default, 
 - `{release-name}-backend-secrets`
 - `{release-name}-frontend-secrets`
 
-**To customize configurations**:
+**Dynamic Secrets**
+Some secrets are dynamically generated during installation or upgrade:
+
+**BETTER_AUTH_SECRET`**: A 32-character random string is automatically generated
+for authentication.
+
+```yaml
+BETTER_AUTH_SECRET: {{ randAlphaNum 32 | quote }}
+```
+
+**Customizable Secrets**:
+
+Other secrets must be explicitly provided by the user:
+
+- **`GITHUB_CLIENT_ID`**: Replace `<REPLACE_WITH_GITHUB_CLIENT_ID>` with your
+  GitHub OAuth client ID.
+- **`GITHUB_CLIENT_SECRET`**: Replace `<REPLACE_WITH_GITHUB_CLIENT_SECRET>` with
+  your GitHub OAuth client secret.
+
 1. **Before installation**:
-   Modify `values.yaml` or use `--set` to override secret values.
+  Modify `values.yaml` or use `--set` to override secret values. For example:
+
+  ```yaml
+  # Other options ...
+  --set frontend.secrets.githubClientId="your-client-id" \
+  --set frontend.secrets.githubClientSecret="your-client-secret"
+  ```
 
 2. **After installation**:
-   Edit secrets directly (changes persist through upgrades):
+  Edit secrets directly (changes persist through upgrades):
 
-   ```sh
-   kubectl edit secret stackclass-backend-secrets -n stackclass
-   kubectl edit secret stackclass-frontend-secrets -n stackclass
-   ```
+  ```sh
+  kubectl edit secret stackclass-backend-secrets -n stackclass
+  kubectl edit secret stackclass-frontend-secrets -n stackclass
+  ```
 
 **Key Configuration Files**:
 - Backend: Refer to `charts/stackclass/templates/secrets/backend-secrets.yaml`
