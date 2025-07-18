@@ -92,9 +92,9 @@ Usage: {{ include "stackclass.frontend.url" . }}
 */}}
 {{- define "stackclass.frontend.url" -}}
   {{- if .Values.frontend.ingress.tls.enabled -}}
-    {{- printf "https://%s" .Values.frontend.ingress.host | quote -}}
+    {{- printf "https://%s" .Values.frontend.ingress.host -}}
   {{- else -}}
-    {{- printf "http://%s" .Values.frontend.ingress.host | quote -}}
+    {{- printf "http://%s" .Values.frontend.ingress.host -}}
   {{- end -}}
 {{- end -}}
 
@@ -104,9 +104,9 @@ Usage: {{ include "stackclass.backend.url" . }}
 */}}
 {{- define "stackclass.backend.url" -}}
   {{- if .Values.backend.ingress.tls.enabled -}}
-    {{- printf "https://%s" .Values.backend.ingress.host | quote -}}
+    {{- printf "https://%s" .Values.backend.ingress.host -}}
   {{- else -}}
-    {{- printf "http://%s" .Values.backend.ingress.host | quote -}}
+    {{- printf "http://%s" .Values.backend.ingress.host -}}
   {{- end -}}
 {{- end -}}
 
