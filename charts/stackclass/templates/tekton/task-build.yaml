@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+spec:
+  params:
+    - name: DOCKERFILE
+      description: Path to the Dockerfile
+      default: "Dockerfile"
+    - name: CONTEXT
+      description: Path to the build context
+      default: "."
+    - name: IMAGE
+      description: Name of the image to build
+    - name: DESTINATION
+      description: Destination registry for the built image
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:v1.9.0
+      args:
+        - --dockerfile=$(params.DOCKERFILE)
+        - --context=$(params.CONTEXT)
+        - --destination=$(params.DESTINATION)/$(params.IMAGE)
