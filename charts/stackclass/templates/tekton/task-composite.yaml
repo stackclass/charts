@@ -1,28 +1,41 @@
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
-  name: build
+  name: composite
   labels:
     {{- include "stackclass.labels" . | nindent 4 }}
 spec:
   workspaces:
     - name: context
-      description: Directory containing source code
+      description: A workspace to store the generated Dockerfile
     - name: docker-config
       description: Docker credentials (mounted as a Secret)
   params:
     - name: COURSE_IMAGE
-      description: Full path of the image to build
+      description: Full path of the base image
+    - name: TESTER_IMAGE
+      description: Full path of the image containing test cases
+    - name: TEST_IMAGE
+      description: Full path of the merged output image
   steps:
+    - name: generate-dockerfile
+      image: alpine:latest
+      script: |
+        cat <<EOF > /workspace/Dockerfile.composite
+        FROM $(params.COURSE_IMAGE) as base
+        FROM $(params.TESTER_IMAGE) as second
+        FROM base
+        COPY --from=second /app /app
+        EOF
     - name: build-and-push
       image: gcr.io/kaniko-project/executor:v1.9.0
       env:
         - name: DOCKER_CONFIG
           value: $(workspaces.docker-config.path)
       args:
-        - --dockerfile=Dockerfile
+        - --dockerfile=Dockerfile.composite
         - --context=$(workspaces.context.path)
-        - --destination=$(params.COURSE_IMAGE)
+        - --destination=$(params.TEST_IMAGE)
         - --docker-config=$(DOCKER_CONFIG)/config.json
         - --verbosity=debug
       volumeMounts:

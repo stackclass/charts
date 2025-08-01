@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: checkout
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+spec:
+  workspaces:
+    - name: context
+      description: Directory where the Git repo will be cloned
+  params:
+    - name: REPO_URL
+      description: URL of the Git repository to clone
+    - name: REPO_REF
+      description: Git revision (branch, tag, or commit)
+      default: "main"
+  steps:
+    - name: clone
+      image: alpine/git:latest
+      script: |
+        git clone $(params.REPO_URL) $(workspaces.context.path)
+        cd $(workspaces.context.path)
+        git checkout $(params.REPO_REF)

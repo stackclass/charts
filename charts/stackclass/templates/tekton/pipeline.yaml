@@ -1,0 +1,87 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: course-test-pipeline
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+spec:
+  params:
+    - name: REPO_URL
+      description: URL of the Git repository to clone
+    - name: REPO_REF
+      description: Git revision (branch, tag, or commit)
+      default: "main"
+    - name: COURSE_IMAGE
+      description: Full path of the image built by the build task
+    - name: TESTER_IMAGE
+      description: Full path of the image containing test cases
+    - name: TEST_IMAGE
+      description: Full path of the merged output image
+    - name: COMMAND
+      description: Command to run for testing
+      default: "echo 'Testing...'"
+    - name: DOCKER_CONFIG_SECRET
+      description: Name of the Kubernetes secret for Docker credentials
+      default: "docker-config"
+
+  workspaces:
+    - name: context
+      description: A workspace to share files between tasks
+    - name: docker-config
+      secret:
+        secretName: $(params.DOCKER_CONFIG_SECRET)
+
+  tasks:
+    - name: checkout
+      taskRef:
+        name: checkout
+      workspaces:
+        - name: context
+          workspace: context
+      params:
+        - name: REPO_URL
+          value: $(params.REPO_URL)
+        - name: REPO_REF
+          value: $(params.REPO_REF)
+
+    - name: build
+      taskRef:
+        name: build
+      workspaces:
+        - name: context
+          workspace: context
+        - name: docker-config
+          workspace: docker-config
+      params:
+        - name: COURSE_IMAGE
+          value: $(params.COURSE_IMAGE)
+
+    - name: composite
+      taskRef:
+        name: composite
+      workspaces:
+        - name: context
+          workspace: context
+        - name: docker-config
+          workspace: docker-config
+      params:
+        - name: COURSE_IMAGE
+          value: $(params.COURSE_IMAGE)
+        - name: TESTER_IMAGE
+          value: $(params.TESTER_IMAGE)
+        - name: TEST_IMAGE
+          value: $(params.TEST_IMAGE)
+
+    - name: test
+      taskRef:
+        name: test
+      workspaces:
+        - name: context
+          workspace: context
+        - name: docker-config
+          workspace: docker-config
+      params:
+        - name: IMAGE
+          value: $(params.TEST_IMAGE)
+        - name: COMMAND
+          value: $(params.COMMAND)
