@@ -14,3 +14,6 @@ dependencies:
     version: "v1.18.2"
     repository: "https://charts.jetstack.io"
     condition: issuer.enabled
+  - name: tekton-operator
+    version: "0.76.0"
+    repository: "git+https://github.com/tektoncd/operator@charts?ref=v0.76.0"

@@ -113,6 +113,24 @@ cert-manager:
     enabled: false
     keep: false
 
+# Tekton configurations
+tekton:
+  pipeline:
+    performance:
+      replicas: 1
+      threadsPerController: 2
+  pruner:
+    disabled: false
+    schedule: "0 3 * * *"
+    keep: 3
+
+# Tekton Operator configurations
+tekton-operator:
+  # Set this to `true` for the first installation to ensure CRDs are installed.
+  # Note: Setting this to `true` will cause all Tekton resources to be deleted
+  # when uninstalling the chart.
+  installCRDs: false
+
 # Additional configurations
 nodeSelector: {}
 tolerations: []
