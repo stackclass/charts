@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: generate
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+spec:
+  workspaces:
+    - name: context
+      description: Directory to store the generated Dockerfile
+  params:
+    - name: COURSE_IMAGE
+      description: Full path of the base image
+    - name: TESTER_IMAGE
+      description: Full path of the image containing test cases
+  steps:
+    - name: generate
+      image: alpine:latest
+      script: |
+        cat <<EOF > $(workspaces.context.path)/Dockerfile.composite
+        FROM $(params.COURSE_IMAGE) as base
+        FROM $(params.TESTER_IMAGE) as second
+        FROM base
+        COPY --from=second /app /app
+        EOF

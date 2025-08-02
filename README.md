@@ -34,6 +34,7 @@ Run the following command:
 
 ```sh
 tkn hub install task git-clone -n stackclass --version 0.10
+tkn hub install task buildah -n stackclass --version 0.9
 ```
 
 ### Add Helm Repository

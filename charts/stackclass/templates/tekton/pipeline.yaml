@@ -42,31 +42,47 @@ spec:
 
     - name: build
       taskRef:
-        name: build
+        name: buildah
       workspaces:
-        - name: context
+        - name: source
           workspace: context
-        - name: docker-config
+        - name: dockerconfig
           workspace: docker-config
       params:
-        - name: COURSE_IMAGE
+        - name: IMAGE
           value: $(params.COURSE_IMAGE)
+        - name: DOCKERFILE
+          value: Dockerfile
+        - name: CONTEXT
+          value: .
 
-    - name: composite
+    - name: generate
       taskRef:
-        name: composite
+        name: generate
       workspaces:
         - name: context
           workspace: context
-        - name: docker-config
-          workspace: docker-config
       params:
         - name: COURSE_IMAGE
           value: $(params.COURSE_IMAGE)
         - name: TESTER_IMAGE
           value: $(params.TESTER_IMAGE)
-        - name: TEST_IMAGE
+
+    - name: composite
+      taskRef:
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: context
+        - name: dockerconfig
+          workspace: docker-config
+      params:
+        - name: IMAGE
           value: $(params.TEST_IMAGE)
+        - name: DOCKERFILE
+          value: Dockerfile.composite
+        - name: CONTEXT
+          value: .
 
     - name: test
       taskRef:
