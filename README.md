@@ -13,10 +13,20 @@ StackClass to Kubernetes.
 
 ### Pre-requisites
 
-- Kubernetes 1.19+
-- Helm 3.9.0+ & [helm-git](https://github.com/aslafy-z/helm-git)
-- PV provisioner support in the underlying infrastructure
-- ReadWriteMany volumes for deployment scaling
+- Kubernetes 1.19+.
+- Helm 3.9.0+.
+- PV provisioner support in the underlying infrastructure.
+- ReadWriteMany volumes for deployment scaling.
+
+#### Tekton
+
+Tekton is a powerful and flexible open-source framework for creating CI/CD
+systems. We use Tekton to build and test our course test cases, and it's a
+required dependency that must be installed beforehand.
+
+We recommend installing Tekton using the Tekton Operator. For installation
+instructions, refer to: [Tekton Operator Helm
+Chart](https://github.com/tektoncd/operator/tree/main/charts/tekton-operator)
 
 ### Add Helm Repository
 
@@ -292,23 +302,6 @@ To automate TLS certificate management using `cert-manager`, follow these steps:
   notifications.
 - Set `environment` to `prod` for production certificates (rate limits apply).
 - Certificates will be automatically issued and renewed by `cert-manager`.
-
-### Tekton Operator
-
-**First-Time Installation**:
-
-- **Install the Chart**:
-  If this is the first time you are installing `tekton-operator` in your
-  cluster, you need to enable the installation of its Custom Resource
-  Definitions (CRDs) by setting `tekton-operator.installCRDs=true`:
-
-  ```yaml
-  # Other options ...
-  --set tekton-operator.installCRDs=true
-  ```
-
-- **Note**: Setting `installCRDs=true` will cause all Tekton resources to be
-  deleted when uninstalling the chart.
 
 ## Documentation
 

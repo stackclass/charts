@@ -20,16 +20,12 @@ spec:
     - name: COMMAND
       description: Command to run for testing
       default: "echo 'Testing...'"
-    - name: DOCKER_CONFIG_SECRET
-      description: Name of the Kubernetes secret for Docker credentials
-      default: "docker-config"
 
   workspaces:
     - name: context
       description: A workspace to share files between tasks
     - name: docker-config
-      secret:
-        secretName: $(params.DOCKER_CONFIG_SECRET)
+      description: A workspace for Docker credentials
 
   tasks:
     - name: checkout
