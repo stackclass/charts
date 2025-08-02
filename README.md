@@ -17,6 +17,7 @@ StackClass to Kubernetes.
 - Helm 3.9.0+.
 - PV provisioner support in the underlying infrastructure.
 - ReadWriteMany volumes for deployment scaling.
+- [Tekton Pipelines CLI (tkn)](https://github.com/tektoncd/cli).
 
 #### Tekton
 
@@ -26,7 +27,14 @@ required dependency that must be installed beforehand.
 
 We recommend installing Tekton using the Tekton Operator. For installation
 instructions, refer to: [Tekton Operator Helm
-Chart](https://github.com/tektoncd/operator/tree/main/charts/tekton-operator)
+Chart](https://github.com/tektoncd/operator/tree/main/charts/tekton-operator).
+
+After installing Tekton, we also need to install some community-shared Tasks.
+Run the following command:
+
+```sh
+tkn hub install task git-clone -n stackclass --version 0.10
+```
 
 ### Add Helm Repository
 

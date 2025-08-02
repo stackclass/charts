@@ -30,14 +30,14 @@ spec:
   tasks:
     - name: checkout
       taskRef:
-        name: checkout
+        name: git-clone
       workspaces:
-        - name: context
+        - name: output
           workspace: context
       params:
-        - name: REPO_URL
+        - name: url
           value: $(params.REPO_URL)
-        - name: REPO_REF
+        - name: revision
           value: $(params.REPO_REF)
 
     - name: build
