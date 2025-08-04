@@ -18,6 +18,7 @@ StackClass to Kubernetes.
 - PV provisioner support in the underlying infrastructure.
 - ReadWriteMany volumes for deployment scaling.
 - [Tekton Pipelines CLI (tkn)](https://github.com/tektoncd/cli).
+- Cert-Manager (for TLS automation, install separately if needed).
 
 #### Tekton
 
@@ -272,37 +273,37 @@ kubectl get ingress -n stackclass
 
 ##### Using Cert-Manager for Automatic TLS
 
+`cert-manager` is a Kubernetes add-on that automates the management and issuance
+of TLS certificates from various issuing sources. It ensures certificates are
+valid and up-to-date, and attempts to renew them at an appropriate time before
+expiry.
+
 To automate TLS certificate management using `cert-manager`, follow these steps:
 
-**Enable Issuer** in `values.yaml` or via `--set`:
+1. **Install `cert-manager`**:
 
-```yaml
-# Other options ...
---set issuer.enabled=true \
---set issuer.email=your-email@example.com \
---set issuer.environment=staging  # or "prod" for production
-```
-
-**First-Time Installation**:
-
-- **Install the Chart**:
-  If this is the first time you are installing `cert-manager` in your cluster,
-  you need to enable the installation of its Custom Resource Definitions
-  (CRDs) by setting `cert-manager.crds.enabled=true`:
-
-  ```yaml
-  # Other options ...
-  --set cert-manager.crds.enabled=true
+  ```bash
+  helm repo add jetstack https://charts.jetstack.io
+  helm install cert-manager jetstack/cert-manager \
+    --namespace cert-manager \
+    --create-namespace \
+    --version v1.18.2
   ```
 
-- **Retaining CRDs**:
-  If you want to retain the CRDs even after uninstalling the chart (e.g., for
-  future installations), set `cert-manager.crds.keep=true`:
+  **Notes**: If this is the first time you are installing `cert-manager` in your
+  cluster, you need to enable the installation of its Custom Resource
+  Definitions (CRDs) by setting `crds.enabled=true`.
+
+  For detailed installation instructions, refer to the [cert-manager
+  Documentation](https://cert-manager.io/docs/installation/).
+
+2. **Enable Issuer** in `values.yaml` or via `--set`:
 
   ```yaml
   # Other options ...
-  --set cert-manager.crds.enabled=true \
-  --set cert-manager.crds.keep=true
+  --set issuer.enabled=true \
+  --set issuer.email=your-email@example.com \
+  --set issuer.environment=staging  # or "prod" for production
   ```
 
 **Notes**:
