@@ -18,6 +18,7 @@ StackClass to Kubernetes.
 - [Tekton Pipelines CLI (tkn)](https://github.com/tektoncd/cli).
 - Cert-Manager (for TLS automation, install separately if needed).
 - [Harbor](https://goharbor.io/) (for container image storage and management).
+- [Gitea](https://gitea.io/) (for Git repository management).
 
 ### Cert-Manager
 
@@ -56,6 +57,15 @@ tkn hub install task buildah -n stackclass
 Harbor is an open-source container image registry that provides secure storage
 and management of container images. To install Harbor, follow the official
 [Harbor Helm Chart](https://github.com/goharbor/harbor-helm) instructions.
+
+### Gitea
+
+Gitea is a lightweight and self-hosted Git service required for managing
+repositories in StackClass. It provides essential Git functionality for the
+platform.
+
+For detailed configuration options, refer to the [Gitea Helm Chart
+Documentation](https://gitea.com/gitea/helm-gitea/src/branch/main/README.md).
 
 ## Add Helm Repository
 
