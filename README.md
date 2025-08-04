@@ -9,9 +9,7 @@ StackClass to Kubernetes.
 [![GitHub contributors](https://img.shields.io/github/contributors/stackclass/charts)](https://github.com/stackclass/charts/graphs/charts)
 [![GitHub issues](https://img.shields.io/github/issues/stackclass/charts)](https://github.com/stackclass/charts/issues)
 
-## Usage
-
-### Pre-requisites
+## Pre-requisites
 
 - Kubernetes 1.19+.
 - Helm 3.9.0+.
@@ -19,8 +17,23 @@ StackClass to Kubernetes.
 - ReadWriteMany volumes for deployment scaling.
 - [Tekton Pipelines CLI (tkn)](https://github.com/tektoncd/cli).
 - Cert-Manager (for TLS automation, install separately if needed).
+- [Harbor](https://goharbor.io/) (for container image storage and management).
 
-#### Tekton
+### Cert-Manager
+
+`cert-manager` is a Kubernetes add-on that automates the management and issuance
+of TLS certificates from various issuing sources. It ensures certificates are
+valid and up-to-date, and attempts to renew them at an appropriate time before
+expiry.
+
+**Optional**: Only install cert-manager if you need TLS automation. If you're
+using your own certificates or don't need HTTPS, you can skip this step. For TLS
+configuration options, see the [TLS Support](#tls-support) section below.
+
+For detailed installation instructions, refer to the [cert-manager
+Documentation](https://cert-manager.io/docs/installation/).
+
+### Tekton
 
 Tekton is a powerful and flexible open-source framework for creating CI/CD
 systems. We use Tekton to build and test our course test cases, and it's a
@@ -34,11 +47,17 @@ After installing Tekton, we also need to install some community-shared Tasks.
 Run the following command:
 
 ```sh
-tkn hub install task git-clone -n stackclass --version 0.10
-tkn hub install task buildah -n stackclass --version 0.9
+tkn hub install task git-clone -n stackclass
+tkn hub install task buildah -n stackclass
 ```
 
-### Add Helm Repository
+### Harbor
+
+Harbor is an open-source container image registry that provides secure storage
+and management of container images. To install Harbor, follow the official
+[Harbor Helm Chart](https://github.com/goharbor/harbor-helm) instructions.
+
+## Add Helm Repository
 
 ```sh
 helm repo add stackclass https://charts.stackclass.dev
@@ -48,7 +67,7 @@ If you had already added this repo earlier, run `helm repo update` to retrieve
 the latest versions of the packages. You can then run `helm search repo
 stackclass` to see the charts.
 
-### Install StackClass
+## Install StackClass
 
 > **Important Notes**: By default, this installs PostgreSQL (see [PostgreSQL
   config](#postgresql) for credentials). To customize (e.g., disable PostgreSQL
@@ -64,7 +83,7 @@ helm install stackclass stackclass/stackclass --create-namespace -n=stackclass
 This command deploys the StackClass API Server, frontend, and services on your
 Kubernetes cluster with default configurations.
 
-### Upgrade StackClass
+## Upgrade StackClass
 
 To upgrade an existing StackClass deployment (e.g., after modifying `values.yaml`):
 
@@ -84,7 +103,7 @@ Example with atomic upgrade:
 helm upgrade stackclass stackclass/stackclass -n=stackclass --atomic --wait
 ```
 
-### Uninstall StackClass
+## Uninstall StackClass
 
 To uninstall the chart and remove all associated Kubernetes resources:
 
@@ -273,31 +292,9 @@ kubectl get ingress -n stackclass
 
 ##### Using Cert-Manager for Automatic TLS
 
-`cert-manager` is a Kubernetes add-on that automates the management and issuance
-of TLS certificates from various issuing sources. It ensures certificates are
-valid and up-to-date, and attempts to renew them at an appropriate time before
-expiry.
-
-To automate TLS certificate management using `cert-manager`, follow these steps:
-
-1. **Install `cert-manager`**:
-
-  ```bash
-  helm repo add jetstack https://charts.jetstack.io
-  helm install cert-manager jetstack/cert-manager \
-    --namespace cert-manager \
-    --create-namespace \
-    --version v1.18.2
-  ```
-
-  **Notes**: If this is the first time you are installing `cert-manager` in your
-  cluster, you need to enable the installation of its Custom Resource
-  Definitions (CRDs) by setting `crds.enabled=true`.
-
-  For detailed installation instructions, refer to the [cert-manager
-  Documentation](https://cert-manager.io/docs/installation/).
-
-2. **Enable Issuer** in `values.yaml` or via `--set`:
+To automate TLS certificate management using `cert-manager`, first ensure
+`cert-manager` is installed, then enable the Issuer configuration in
+`values.yaml` or via `--set`:
 
   ```yaml
   # Other options ...
