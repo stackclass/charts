@@ -41,6 +41,7 @@ frontend:
     maxReplicas: 5
     targetCPUUtilizationPercentage: 80
   secrets:
+    analyticsId: ""
     githubClientId: "<REPLACE_WITH_GITHUB_CLIENT_ID>"
     githubClientSecret: "<REPLACE_WITH_GITHUB_CLIENT_SECRET>"
 
