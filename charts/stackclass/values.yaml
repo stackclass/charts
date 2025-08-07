@@ -80,6 +80,12 @@ backend:
   persistence:
     size: 10Gi
     storageClass: ""
+  secrets:
+    gitServerEndpoint: "git.stackclass.local"
+    gitServerUsername: "<REPLACE_WITH_GIT_SERVER_USERNAME>"
+    gitServerPassword: "<REPLACE_WITH_GIT_SERVER_PASSWORD>"
+    gitCommitterName: "StackClass"
+    gitCommitterEmail: "hello@stackclass.dev"
 
 # PostgreSQL configurations
 postgresql:
