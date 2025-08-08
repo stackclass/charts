@@ -20,6 +20,18 @@ spec:
     - name: COMMAND
       description: Command to run for testing
       default: "echo 'Testing...'"
+    - name: TEST_CASES_JSON
+      description: Test cases in JSON format
+      default: "{}"
+    - name: DEBUG_MODE
+      description: Enable debug mode
+      default: "false"
+    - name: TIMEOUT_SECONDS
+      description: Timeout duration in seconds
+      default: "15"
+    - name: SKIP_ANTI_CHEAT
+      description: Skip anti-cheat checks
+      default: "false"
 
   workspaces:
     - name: context
@@ -54,7 +66,7 @@ spec:
         - name: DOCKERFILE
           value: Dockerfile
         - name: CONTEXT
-          value: .
+          value: "."
 
     - name: generate
       taskRef:
@@ -82,7 +94,7 @@ spec:
         - name: DOCKERFILE
           value: Dockerfile.composite
         - name: CONTEXT
-          value: .
+          value: "."
 
     - name: test
       taskRef:
@@ -97,3 +109,11 @@ spec:
           value: $(params.TEST_IMAGE)
         - name: COMMAND
           value: $(params.COMMAND)
+        - name: TEST_CASES_JSON
+          value: $(params.TEST_CASES_JSON)
+        - name: DEBUG_MODE
+          value: $(params.DEBUG_MODE)
+        - name: TIMEOUT_SECONDS
+          value: $(params.TIMEOUT_SECONDS)
+        - name: SKIP_ANTI_CHEAT
+          value: $(params.SKIP_ANTI_CHEAT)

@@ -16,6 +16,17 @@ spec:
     - name: COMMAND
       description: Command to run for testing
       default: "echo 'Testing...'"
+    - name: TEST_CASES_JSON
+      description: Test cases in JSON format
+    - name: DEBUG_MODE
+      description: Enable debug mode
+      default: "false"
+    - name: TIMEOUT_SECONDS
+      description: Timeout duration in seconds
+      default: "15"
+    - name: SKIP_ANTI_CHEAT
+      description: Skip anti-cheat checks
+      default: "false"
   steps:
     - name: test-image
       image: $(params.IMAGE)
@@ -25,6 +36,16 @@ spec:
       env:
         - name: DOCKER_CONFIG
           value: $(workspaces.docker-config.path)
+        - name: STACKCLASS_REPOSITORY_DIR
+          value: $(workspaces.context.path)
+        - name: STACKCLASS_TEST_CASES_JSON
+          value: $(params.TEST_CASES_JSON)
+        - name: STACKCLASS_DEBUG
+          value: $(params.DEBUG_MODE)
+        - name: STACKCLASS_TIMEOUT_SECONDS
+          value: $(params.TIMEOUT_SECONDS)
+        - name: STACKCLASS_SKIP_ANTI_CHEAT
+          value: $(params.SKIP_ANTI_CHEAT)
       volumeMounts:
         - name: docker-config
           mountPath: $(workspaces.docker-config.path)
