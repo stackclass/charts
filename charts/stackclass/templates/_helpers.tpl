@@ -63,24 +63,12 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Generate a random password for PostgreSQL.
-The password consists of 16 alphanumeric characters.
-*/}}
-{{- define "stackclass.postgresql.password" -}}
-  {{- if not .Values.postgresql.password -}}
-    {{- $password := randAlphaNum 16 -}}
-  {{- $_ := set .Values "postgresql" (merge .Values.postgresql (dict "password" $password)) -}}
-  {{- end -}}
-  {{- .Values.postgresql.password -}}
-{{- end -}}
-
-{{/*
 Generate PostgreSQL connection URL based on enabled status.
 Usage: {{ include "stackclass.postgresql.url" . }}
 */}}
 {{- define "stackclass.postgresql.url" -}}
   {{- if .Values.postgresql.enabled -}}
-    {{- printf "postgresql://%s:%s@%s-postgresql/%s" .Values.postgresql.auth.username (include "stackclass.postgresql.password" .) .Release.Name .Values.postgresql.auth.database | quote -}}
+    {{- printf "postgresql://%s:%s@%s-postgresql/%s" .Values.postgresql.auth.username .Values.postgresql.auth.password .Release.Name .Values.postgresql.auth.database | quote -}}
   {{- else -}}
     "postgresql://<REPLACE_WITH_DB_USER>:<REPLACE_WITH_DB_PASS>@localhost/<REPLACE_WITH_DB_DATABASE>"
   {{- end -}}

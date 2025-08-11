@@ -94,7 +94,7 @@ postgresql:
   auth:
     username: stackclass
     database: stackclass
-    existingSecret: "{{ .Release.Name }}-postgresql-secrets"
+    password: 123456
   primary:
     persistence:
       size: 10Gi
