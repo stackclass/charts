@@ -28,13 +28,7 @@ frontend:
       enabled: false
       # Leave blank to use the default generated name
       secretName: ""
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 200m
-      memory: 256Mi
+  resources: {}
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -65,13 +59,7 @@ backend:
       enabled: false
       # Leave blank to use the default generated name
       secretName: ""
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-    requests:
-      cpu: 500m
-      memory: 512Mi
+  resources: {}
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -99,13 +87,7 @@ postgresql:
     persistence:
       size: 10Gi
       storageClass: ""
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 1Gi
-    requests:
-      cpu: 500m
-      memory: 512Mi
+  resources: {}
 
 # Certificate issuer configurations for Let's Encrypt
 # Used to automatically generate TLS certificates for ingress resources
