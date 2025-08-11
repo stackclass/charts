@@ -94,7 +94,7 @@ postgresql:
   auth:
     username: stackclass
     database: stackclass
-    password: 123456
+    password: stackclass
   primary:
     persistence:
       size: 10Gi
