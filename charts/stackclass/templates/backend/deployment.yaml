@@ -24,6 +24,7 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "stackclass.fullname" . }}-backend
       {{- if .Values.postgresql.enabled }}
       initContainers:
         - name: check-postgresql
