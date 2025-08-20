@@ -10,7 +10,7 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   workspaces:
-    - name: context
+    - name: source
       description: A workspace to share files for testing
     - name: docker-config
       description: Docker credentials (mounted as a Secret)
@@ -41,7 +41,7 @@ spec:
         - name: DOCKER_CONFIG
           value: $(workspaces.docker-config.path)
         - name: STACKCLASS_REPOSITORY_DIR
-          value: $(workspaces.context.path)
+          value: $(workspaces.source.path)
         - name: STACKCLASS_TEST_CASES_JSON
           value: $(params.TEST_CASES_JSON)
         - name: STACKCLASS_DEBUG

@@ -10,7 +10,7 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   workspaces:
-    - name: context
+    - name: source
       description: Directory to store the generated Dockerfile
   params:
     - name: COURSE_IMAGE
@@ -21,7 +21,7 @@ spec:
     - name: generate
       image: alpine:latest
       script: |
-        cat <<EOF > $(workspaces.context.path)/Dockerfile.composite
+        cat <<EOF > $(workspaces.source.path)/Dockerfile.composite
         FROM $(params.COURSE_IMAGE) as base
         FROM $(params.TESTER_IMAGE) as second
         FROM base

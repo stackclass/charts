@@ -48,7 +48,7 @@ spec:
       taskRef:
         name: git-clone
       workspaces:
-        - name: output
+        - name: source
           workspace: context
       params:
         - name: url
@@ -76,7 +76,7 @@ spec:
       taskRef:
         name: generate
       workspaces:
-        - name: context
+        - name: source
           workspace: context
       params:
         - name: COURSE_IMAGE
@@ -104,7 +104,7 @@ spec:
       taskRef:
         name: test
       workspaces:
-        - name: context
+        - name: source
           workspace: context
         - name: docker-config
           workspace: docker-config
