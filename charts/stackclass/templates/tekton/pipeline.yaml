@@ -48,7 +48,7 @@ spec:
       taskRef:
         name: git-clone
       workspaces:
-        - name: source
+        - name: output
           workspace: context
       params:
         - name: url
