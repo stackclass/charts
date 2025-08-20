@@ -55,6 +55,8 @@ spec:
           value: $(params.REPO_URL)
         - name: revision
           value: $(params.REPO_REF)
+        - name: subdirectory
+          value: "source"
 
     - name: build
       taskRef:
