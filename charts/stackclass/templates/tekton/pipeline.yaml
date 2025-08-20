@@ -38,7 +38,7 @@ spec:
       default: "false"
 
   workspaces:
-    - name: context
+    - name: shared-workspace
       description: A workspace to share files between tasks
     - name: docker-config
       description: A workspace for Docker credentials
@@ -49,37 +49,37 @@ spec:
         name: git-clone
       workspaces:
         - name: output
-          workspace: context
+          workspace: shared-workspace
       params:
         - name: url
           value: $(params.REPO_URL)
         - name: revision
           value: $(params.REPO_REF)
         - name: subdirectory
-          value: "source"
+          value: ""
+        - name: deleteExisting
+          value: "true"
 
     - name: build
       taskRef:
         name: buildah
+      runAfter: [checkout]
       workspaces:
         - name: source
-          workspace: context
+          workspace: shared-workspace
         - name: dockerconfig
           workspace: docker-config
       params:
         - name: IMAGE
           value: $(params.COURSE_IMAGE)
-        - name: DOCKERFILE
-          value: Dockerfile
-        - name: CONTEXT
-          value: "."
 
     - name: generate
       taskRef:
         name: generate
+      runAfter: [build]
       workspaces:
         - name: source
-          workspace: context
+          workspace: shared-workspace
       params:
         - name: COURSE_IMAGE
           value: $(params.COURSE_IMAGE)
@@ -89,25 +89,25 @@ spec:
     - name: composite
       taskRef:
         name: buildah
+      runAfter: [generate]
       workspaces:
         - name: source
-          workspace: context
+          workspace: shared-workspace
         - name: dockerconfig
           workspace: docker-config
       params:
         - name: IMAGE
           value: $(params.TEST_IMAGE)
         - name: DOCKERFILE
-          value: Dockerfile.composite
-        - name: CONTEXT
-          value: "."
+          value: ./Dockerfile.composite
 
     - name: test
       taskRef:
         name: test
+      runAfter: [composite]
       workspaces:
         - name: source
-          workspace: context
+          workspace: shared-workspace
         - name: docker-config
           workspace: docker-config
       params:
