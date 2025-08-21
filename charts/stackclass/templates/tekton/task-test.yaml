@@ -12,8 +12,8 @@ spec:
   workspaces:
     - name: source
       description: A workspace to share files for testing
-    - name: docker-credentials
-      description: Docker credentials (mounted as a Secret)
+    - name: dockerconfig
+      description: A workspace for Docker credentials
   params:
     - name: IMAGE
       description: Full path of the image to test
@@ -39,7 +39,7 @@ spec:
         - $(params.COMMAND)
       env:
         - name: DOCKER_CONFIG
-          value: $(workspaces.docker-credentials.path)
+          value: $(workspaces.dockerconfig.path)
         - name: STACKCLASS_REPOSITORY_DIR
           value: $(workspaces.source.path)
         - name: STACKCLASS_TEST_CASES_JSON
@@ -50,6 +50,3 @@ spec:
           value: $(params.TIMEOUT_SECONDS)
         - name: STACKCLASS_SKIP_ANTI_CHEAT
           value: $(params.SKIP_ANTI_CHEAT)
-      volumeMounts:
-        - name: docker-credentials
-          mountPath: $(workspaces.docker-credentials.path)

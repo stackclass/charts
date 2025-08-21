@@ -108,7 +108,7 @@ spec:
       workspaces:
         - name: source
           workspace: shared-workspace
-        - name: docker-credentials
+        - name: dockerconfig
           workspace: docker-credentials
       params:
         - name: IMAGE
