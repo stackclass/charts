@@ -54,7 +54,9 @@ backend:
   ingress:
     enabled: true
     annotations: {}
-    host: api.stackclass.local
+    hosts:
+      api: api.stackclass.local
+      git: git.stackclass.local
     tls:
       enabled: false
       # Leave blank to use the default generated name
@@ -69,7 +71,8 @@ backend:
     size: 10Gi
     storageClass: ""
   secrets:
-    gitServerEndpoint: "git.stackclass.local"
+    gitProxyEndpoint: "http://git.stackclass.local"
+    gitServerEndpoint: "http://repo.stackclass.local"
     gitServerUsername: "<REPLACE_WITH_GIT_SERVER_USERNAME>"
     gitServerPassword: "<REPLACE_WITH_GIT_SERVER_PASSWORD>"
     gitCommitterName: "StackClass"

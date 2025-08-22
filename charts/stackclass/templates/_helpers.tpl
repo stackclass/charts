@@ -92,9 +92,9 @@ Usage: {{ include "stackclass.backend.url" . }}
 */}}
 {{- define "stackclass.backend.url" -}}
   {{- if .Values.backend.ingress.tls.enabled -}}
-    {{- printf "https://%s" .Values.backend.ingress.host -}}
+    {{- printf "https://%s" .Values.backend.ingress.hosts.api -}}
   {{- else -}}
-    {{- printf "http://%s" .Values.backend.ingress.host -}}
+    {{- printf "http://%s" .Values.backend.ingress.hosts.api -}}
   {{- end -}}
 {{- end -}}
 

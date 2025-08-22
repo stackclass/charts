@@ -17,7 +17,8 @@ spec:
   ingressClassName: {{ .Values.global.ingressClass }}
   {{- end }}
   rules:
-    - host: {{ .Values.backend.ingress.host | quote }}
+    {{- range $key, $host := .Values.backend.ingress.hosts }}
+    - host: {{ $host | quote }}
       http:
         paths:
           - path: /
@@ -27,10 +28,13 @@ spec:
                 name: {{ include "stackclass.fullname" $ }}-backend
                 port:
                   number: {{ $.Values.backend.service.port }}
+    {{- end }}
   {{- if .Values.backend.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.backend.ingress.host | quote }}
+        {{- range $key, $host := .Values.backend.ingress.hosts }}
+        - {{ $host | quote }}
+        {{- end }}
       secretName: {{ include "stackclass.backendTlsName" . | quote }}
   {{- end }}
 {{- end }}
