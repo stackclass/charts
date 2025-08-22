@@ -135,21 +135,14 @@ This chart manages application settings through Kubernetes Secrets. By default, 
 - `{release-name}-backend-secrets`
 - `{release-name}-frontend-secrets`
 
-**Dynamic Secrets**
-Some secrets are dynamically generated during installation or upgrade:
+-**Customizable Secrets**:
+-
+-Some secrets must be explicitly provided by the user:
 
-**BETTER_AUTH_SECRET`**: A 32-character random string is automatically generated
-for authentication.
-
-```yaml
-BETTER_AUTH_SECRET: {{ randAlphaNum 32 | quote }}
-```
-
-**Customizable Secrets**:
-
-Other secrets must be explicitly provided by the user:
-
-- **`GITHUB_CLIENT_ID`**: Replace `<REPLACE_WITH_GITHUB_CLIENT_ID>` with your
+- **`BETTER_AUTH_SECRET`**: Replace `<REPLACE_WITH_BETTER_AUTH_SECRET>` with
+  your Better Auth Secret.
+- **`GITHUB_CLIENT_ID`**: Replace
+  `<REPLACE_WITH_GITHUB_CLIENT_ID>` with your
   GitHub OAuth client ID.
 - **`GITHUB_CLIENT_SECRET`**: Replace `<REPLACE_WITH_GITHUB_CLIENT_SECRET>` with
   your GitHub OAuth client secret.
@@ -159,6 +152,7 @@ Other secrets must be explicitly provided by the user:
 
   ```yaml
   # Other options ...
+  --set frontend.secrets.betterAuthSecret="your-better-auth-secret" \
   --set frontend.secrets.githubClientId="your-client-id" \
   --set frontend.secrets.githubClientSecret="your-client-secret"
   ```

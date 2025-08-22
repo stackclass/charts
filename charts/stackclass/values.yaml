@@ -36,6 +36,7 @@ frontend:
     targetCPUUtilizationPercentage: 80
   secrets:
     analyticsId: ""
+    betterAuthSecret: "<REPLACE_WITH_BETTER_AUTH_SECRET>"
     githubClientId: "<REPLACE_WITH_GITHUB_CLIENT_ID>"
     githubClientSecret: "<REPLACE_WITH_GITHUB_CLIENT_SECRET>"
 
