@@ -3,6 +3,22 @@ entries:
   stackclass:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-08-22T08:51:40.201876628Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.7.18
+    description: Helm charts for the StackClass platform on Kubernetes
+    digest: c9cc480b6b03b54ea6668a9034fb74d28913f925aa43e9ab14f31d4cbbc91bc5
+    icon: https://stackclass.dev/icon.png
+    name: stackclass
+    type: application
+    urls:
+    - https://github.com/stackclass/charts/releases/download/stackclass-0.18.0/stackclass-0.18.0.tgz
+    version: 0.18.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-08-22T07:40:37.622143005Z"
     dependencies:
     - condition: postgresql.enabled
@@ -761,4 +777,4 @@ entries:
     urls:
     - https://github.com/stackclass/charts/releases/download/stackclass-0.1.0/stackclass-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-22T07:40:37.622803787Z"
+generated: "2025-08-22T08:51:40.202172654Z"
