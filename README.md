@@ -227,7 +227,9 @@ the configurations for different platforms:
 The default `host` values are configured for testing purposes:
 
 - Frontend: `stackclass.local`
-- Backend: `api.stackclass.local`
+- Backend:
+  - api: `api.stackclass.local`
+  - git: `git.stackclass.local`
 
 For production environments, you should override these values using `--set` or a
 custom `values.yaml` file. For example:
@@ -235,7 +237,8 @@ custom `values.yaml` file. For example:
 ```sh
 # Other options ...
 --set frontend.ingress.host=your-frontend-domain.com \
---set backend.ingress.host=your-backend-domain.com
+--set backend.ingress.hosts.api=your-backend-domain.com \
+--set backend.ingress.hosts.git=your-git-domain.com
 ```
 
 #### TLS Support
