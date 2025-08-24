@@ -102,7 +102,7 @@ Usage: {{ include "stackclass.backend.url" . }}
 Generate issuer name
 */}}
 {{- define "stackclass.issuerName" -}}
-    {{- printf "%s-issuer" (include "stackclass.fullname" .) -}}
+    {{- printf "%s-cluster-issuer" (include "stackclass.fullname" .) -}}
 {{- end -}}
 
 {{/*

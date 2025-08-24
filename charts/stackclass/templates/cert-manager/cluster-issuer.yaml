@@ -1,6 +1,6 @@
 {{- if .Values.issuer.enabled }}
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: {{ include "stackclass.issuerName" . | quote }}
   labels:
