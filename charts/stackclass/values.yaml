@@ -81,7 +81,6 @@ backend:
     dockerRegistryEndpoint: "docker.stackclass.local"
     dockerRegistryUsername: "<REPLACE_WITH_DOCKER_REGISTRY_USERNAME>"
     dockerRegistryPassword: "<REPLACE_WITH_DOCKER_REGISTRY_PASSWORD>"
-    authSecret: "<REPLACE_WITH_AUTH_SECRET>"
 
 # PostgreSQL configurations
 postgresql:
