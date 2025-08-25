@@ -62,5 +62,3 @@ spec:
           --max-time 30 \
           --retry 2 \
           --retry-delay 1
-
-        echo "Webhook notification sent successfully"
