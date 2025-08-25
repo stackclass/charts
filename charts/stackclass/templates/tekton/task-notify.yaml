@@ -1,0 +1,76 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: notify
+  labels:
+    {{- include "stackclass.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  params:
+    - name: WEBHOOK_URL
+      description: URL to send the status notification
+    - name: PIPELINE_RUN_NAME
+      description: Name of the pipeline run
+    - name: PIPELINE_RUN_STATUS
+      description: Status of the pipeline run (True/False)
+    - name: PIPELINE_RUN_REASON
+      description: Reason for the pipeline run status
+    - name: TEST_TASK_STATUS
+      description: Status of the test task
+    - name: TEST_TASK_REASON
+      description: Reason for the test task status
+    - name: REPO
+      description: Repository identifier
+    - name: COURSE
+      description: Course identifier
+    - name: STAGE
+      description: Current course stage identifier
+    - name: SECRET
+      description: Secret token for authentication
+  steps:
+    - name: send-webhook
+      image: curlimages/curl:8.15.0
+      script: |
+        #!/bin/sh
+
+        # Only send if WEBHOOK_URL is provided
+        if [ -z "$(params.WEBHOOK_URL)" ]; then
+          echo "No webhook URL provided, skipping notification"
+          exit 0
+        fi
+
+        # Prepare JSON payload
+        cat > /tmp/payload.json << EOF
+        {
+          "name": "$(params.PIPELINE_RUN_NAME)",
+          "status": "$(params.PIPELINE_RUN_STATUS)",
+          "reason": "$(params.PIPELINE_RUN_REASON)",
+          "repo": "$(params.REPO)",
+          "course": "$(params.COURSE)",
+          "stage": "$(params.STAGE)",
+          "secret": "$(params.SECRET)",
+          "tasks": {
+            "test": {
+              "status": "$(params.TEST_TASK_STATUS)",
+              "reason": "$(params.TEST_TASK_REASON)"
+            }
+          },
+          "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+        }
+        EOF
+
+        # Send the webhook request
+        echo "Sending status notification to $(params.WEBHOOK_URL)"
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -d @/tmp/payload.json \
+          "$(params.WEBHOOK_URL)" \
+          --connect-timeout 10 \
+          --max-time 30 \
+          --retry 2 \
+          --retry-delay 1
+
+        echo "Webhook notification sent successfully"
