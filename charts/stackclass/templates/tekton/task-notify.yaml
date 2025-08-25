@@ -16,8 +16,6 @@ spec:
       description: Name of the pipeline run
     - name: PIPELINE_RUN_STATUS
       description: Status of the pipeline run (True/False)
-    - name: PIPELINE_RUN_REASON
-      description: Reason for the pipeline run status
     - name: TEST_TASK_STATUS
       description: Status of the test task
     - name: TEST_TASK_REASON
@@ -47,7 +45,6 @@ spec:
         {
           "name": "$(params.PIPELINE_RUN_NAME)",
           "status": "$(params.PIPELINE_RUN_STATUS)",
-          "reason": "$(params.PIPELINE_RUN_REASON)",
           "repo": "$(params.REPO)",
           "course": "$(params.COURSE)",
           "stage": "$(params.STAGE)",

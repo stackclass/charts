@@ -36,6 +36,16 @@ spec:
     - name: SKIP_ANTI_CHEAT
       description: Skip anti-cheat checks
       default: "false"
+    - name: WEBHOOK_URL
+      description: URL to send the status notification
+    - name: REPO
+      description: Repository identifier
+    - name: COURSE
+      description: Course identifier
+    - name: STAGE
+      description: Current course stage identifier
+    - name: SECRET
+      description: Secret token for authentication
 
   workspaces:
     - name: shared-workspace
@@ -123,3 +133,27 @@ spec:
           value: $(params.TIMEOUT_SECONDS)
         - name: SKIP_ANTI_CHEAT
           value: $(params.SKIP_ANTI_CHEAT)
+
+  finally:
+    - name: notify
+      taskRef:
+        name: notify
+      params:
+        - name: WEBHOOK_URL
+          value: $(params.WEBHOOK_URL)
+        - name: PIPELINE_RUN_NAME
+          value: $(context.pipelineRun.name)
+        - name: PIPELINE_RUN_STATUS
+          value: $(tasks.status)
+        - name: TEST_TASK_STATUS
+          value: $(tasks.test.status)
+        - name: TEST_TASK_REASON
+          value: $(tasks.test.reason)
+        - name: REPO
+          value: $(params.REPO)
+        - name: COURSE
+          value: $(params.COURSE)
+        - name: STAGE
+          value: $(params.STAGE)
+        - name: SECRET
+          value: $(params.SECRET)
