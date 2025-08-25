@@ -34,12 +34,6 @@ spec:
       script: |
         #!/bin/sh
 
-        # Only send if WEBHOOK_URL is provided
-        if [ -z "$(params.WEBHOOK_URL)" ]; then
-          echo "No webhook URL provided, skipping notification"
-          exit 0
-        fi
-
         # Prepare JSON payload
         cat > /tmp/payload.json << EOF
         {
@@ -54,8 +48,7 @@ spec:
               "status": "$(params.TEST_TASK_STATUS)",
               "reason": "$(params.TEST_TASK_REASON)"
             }
-          },
-          "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          }
         }
         EOF
 
