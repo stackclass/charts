@@ -25,5 +25,8 @@ spec:
         FROM $(params.COURSE_IMAGE) as base
         FROM $(params.TESTER_IMAGE) as second
         FROM base
+        WORKDIR /app
         COPY --from=second /app /app
+        COPY .stackclass/run.sh ./your_program.sh
+        RUN chmod +x ./your_program.sh
         EOF
