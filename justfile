@@ -93,7 +93,7 @@ bump-version:
     echo ""
     echo "=== Done! Run 'just release' to commit and push. ==="
 
-# Release chart (commit, tag, push)
+# Release chart (commit, push - tag is created by chart-releaser-action)
 release:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -115,6 +115,8 @@ release:
     echo "Backend version:  v$backend_version"
     echo "Frontend version: v$frontend_version"
     echo ""
+    echo "Note: Tag will be created automatically by chart-releaser-action"
+    echo ""
 
     echo "Changes to be committed:"
     git status --short
@@ -130,20 +132,11 @@ release:
         exit 0
     fi
 
-    # Step 2: Tag
-    if confirm "Run 'git tag v$chart_version'?"; then
-        git tag -m "v$chart_version" "v$chart_version"
+    # Step 2: Push
+    if confirm "Run 'git push origin main'?"; then
+        git push origin main
         echo ""
-    else
-        echo "Aborted at tag step."
-        exit 0
-    fi
-
-    # Step 3: Push
-    if confirm "Run 'git push origin main v$chart_version'?"; then
-        git push origin main "v$chart_version"
-        echo ""
-        echo "=== Chart v$chart_version released! ==="
+        echo "=== Chart v$chart_version pushed! Tag will be created by GitHub Actions. ==="
     else
         echo "Aborted at push step."
         exit 0
