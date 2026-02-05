@@ -46,7 +46,7 @@ backend:
   replicaCount: 1
   image:
     repository: ghcr.io/stackclass/stackclass-server
-    tag: v1.3.0
+    tag: v1.3.1
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
